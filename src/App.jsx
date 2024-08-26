@@ -3,15 +3,23 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import Counter from "./features/counter/Counter";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import RootLayout from "./components/RootLayout";
+import Blog from "./features/blog/Blog";
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <RootLayout />,
+        children: [
+            { index: true, element: <Counter /> },
+            { path: "blog", element: <Blog /> },
+        ],
+    },
+]);
 
 function App() {
-    const [count, setCount] = useState(0);
-
-    return (
-        <main className="min-h-screen">
-            <Counter />
-        </main>
-    );
+    return <RouterProvider router={router} />;
 }
 
 export default App;

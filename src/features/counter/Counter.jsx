@@ -15,7 +15,7 @@ const Counter = () => {
     };
 
     return (
-        <section className="min-h-screen flex flex-col justify-center items-center space-y-6">
+        <section className="flex flex-col justify-center items-center py-6 space-y-6">
             <p className="text-7xl font-bold">{count}</p>
             <div className="space-x-4">
                 <button
