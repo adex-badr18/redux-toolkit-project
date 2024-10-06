@@ -5,7 +5,8 @@ import "./App.css";
 import Counter from "./features/counter/Counter";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./components/RootLayout";
-import Blog from "./features/blog/Blog";
+import PostsList from "./features/blog/posts/PostsList";
+import AddPostForm from "./features/blog/posts/AddPostForm";
 
 const router = createBrowserRouter([
     {
@@ -13,7 +14,8 @@ const router = createBrowserRouter([
         element: <RootLayout />,
         children: [
             { index: true, element: <Counter /> },
-            { path: "blog", element: <Blog /> },
+            { path: "posts", element: <PostsList /> },
+            { path: "posts/add", element: <AddPostForm /> },
         ],
     },
 ]);
