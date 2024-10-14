@@ -1,37 +1,53 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { selectAllPosts } from "./postsSlice";
-import PostAuthor from "./PostAuthor";
-import TimeAgo from "./TimeAgo";
-import ReactionButtons from "./ReactionButtons";
+import React, { useEffect } from "react";
+import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import {
+    selectAllPosts,
+    getPostsError,
+    getPostsStatus,
+    fetchPosts,
+} from "./postsSlice";
+
+import Post from "./Post";
 
 const PostsList = () => {
+    const dispatch = useDispatch();
+
     const posts = useSelector(selectAllPosts);
+    const postsStatus = useSelector(getPostsStatus);
+    const error = useSelector(getPostsError);
 
-    // make a shallow copy of the array first, to prevent sorting the original data.
-    const orderedPosts = posts
-        .slice()
-        .sort((a, b) => b.date.localeCompare(a.date)); 
+    useEffect(() => {
+        if (postsStatus === "idle") {
+            dispatch(fetchPosts());
+        }
+    }, [postsStatus, dispatch]);
 
-    const renderedPosts = orderedPosts.map((post) => (
-        <article
-            key={post.id}
-            className="text-white w-full max-w-lg px-6 py-10 border border-white mb-5 rounded"
-        >
-            <h3 className="text-2xl font-medium">{post.title}</h3>
-            <p className="">{post.content.substring(0, 100)}</p>
-            <p className="mt-1 space-x-3 text-sm">
-                <PostAuthor userId={post.postAuthor} />
-                <TimeAgo timestamp={post.date} />
-            </p>
-            <ReactionButtons post={post} />
-        </article>
-    ));
+    let content;
+    if (postsStatus === "loading") {
+        content = <p className="text-white">Loading...</p>;
+    } else if (postsStatus === "succeeded") {
+        const uniquePosts = posts.filter(
+            (post, index, self) =>
+                index === self.findIndex((t) => post.id === t.id)
+        );
+        // make a shallow copy of the array first, to prevent sorting the original data.
+        const orderedPosts = uniquePosts
+            .slice()
+            .sort((a, b) => b.date.localeCompare(a.date));
+        content = orderedPosts.map((post, index) => (
+            <Post key={index} post={post} />
+        ));
+    } else if (postsStatus === "failed") {
+        content = <p className="text-white">{error}</p>;
+    }
 
     return (
         <section className="space-y-6 p-10">
             <h2 className="text-white text-4xl font-bold">Posts</h2>
-            {renderedPosts}
+            <div className="grid grid-cols-1 justify-between md:grid-cols-2 gap-6 md:gap-10">
+                {content}
+            </div>
         </section>
     );
 };
