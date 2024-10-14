@@ -11,7 +11,14 @@ const AddPostForm = () => {
         postAuthor: "",
         title: "",
         content: "",
-        date: new Date().toISOString()
+        date: new Date().toISOString(),
+        reactions: {
+            thumbsUp: 0,
+            wow: 0,
+            heart: 0,
+            rocket: 0,
+            coffee: 0,
+        },
     });
 
     const handleFormChange = (e) => {
