@@ -27,11 +27,15 @@ const PostsList = () => {
     if (postsStatus === "loading") {
         content = <p className="text-white">Loading...</p>;
     } else if (postsStatus === "succeeded") {
+        // Get distinct posts
         const uniquePosts = posts.filter(
             (post, index, self) =>
                 index === self.findIndex((t) => post.id === t.id)
         );
-        // make a shallow copy of the array first, to prevent sorting the original data.
+
+        // Sort array by the most recent posts,
+        // make a shallow copy of the array first, 
+        // to prevent sorting the original data.
         const orderedPosts = uniquePosts
             .slice()
             .sort((a, b) => b.date.localeCompare(a.date));
