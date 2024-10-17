@@ -28,7 +28,7 @@ const router = createBrowserRouter([
             { index: true, element: <PostsList /> },
             {
                 path: "post",
-                element: <section>{<Outlet />}</section>,
+                element: <section className="p-10">{<Outlet />}</section>,
                 children: [
                     { index: true, element: <AddPostForm /> },
                     { path: ":postId", element: <Post /> },

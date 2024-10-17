@@ -48,7 +48,6 @@ const PostsList = () => {
 
     return (
         <section className="space-y-6 p-10">
-            <h2 className="text-white text-4xl font-bold">Posts</h2>
             <div className="grid grid-cols-1 justify-between md:grid-cols-2 gap-6 md:gap-10">
                 {content}
             </div>

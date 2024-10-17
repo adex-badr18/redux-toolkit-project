@@ -109,7 +109,7 @@ export const postsSlice = createSlice({
                 state.error = action.error.message;
             })
             .addCase(addNewPost.fulfilled, (state, action) => {
-                const {userId, date, reactions} = action.payload
+                const { userId, date, reactions } = action.payload;
                 action.payload.userId = Number(action.payload.userId);
                 action.payload.date = new Date().toISOString();
                 action.payload.reactions = {
@@ -120,15 +120,18 @@ export const postsSlice = createSlice({
                     coffee: 0,
                 };
 
-                console.log(action.payload)
-                state.posts.push(action.payload)
-            })
+                console.log(action.payload);
+                state.posts.push(action.payload);
+            });
     },
 });
 
 export const selectAllPosts = (state) => state.posts.posts;
 export const getPostsStatus = (state) => state.posts.status;
 export const getPostsError = (state) => state.posts.error;
+
+export const selectPostById = (state, postId) =>
+    state.posts.posts.find((post) => post.id === postId);
 
 export const { addPost, addReaction } = postsSlice.actions;
 
