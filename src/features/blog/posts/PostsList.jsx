@@ -8,7 +8,7 @@ import {
     fetchPosts,
 } from "./postsSlice";
 
-import Post from "./Post";
+import PostCard from "./PostCard";
 
 const PostsList = () => {
     const dispatch = useDispatch();
@@ -40,7 +40,7 @@ const PostsList = () => {
             .slice()
             .sort((a, b) => b.date.localeCompare(a.date));
         content = orderedPosts.map((post, index) => (
-            <Post key={index} post={post} />
+            <PostCard key={index} post={post} />
         ));
     } else if (postsStatus === "failed") {
         content = <p className="text-white">{error}</p>;

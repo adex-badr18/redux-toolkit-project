@@ -2,7 +2,7 @@ import PostAuthor from "./PostAuthor";
 import TimeAgo from "./TimeAgo";
 import ReactionButtons from "./ReactionButtons";
 
-const Post = ({ post }) => {
+const PostCard = ({ post }) => {
     return (
         <article className="text-white w-full max-w-lg px-6 py-10 border border-white mb-5 rounded space-y-3">
             <div className="">
@@ -20,4 +20,4 @@ const Post = ({ post }) => {
     );
 };
 
-export default Post;
+export default PostCard;
