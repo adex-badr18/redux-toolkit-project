@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet, Link } from "react-router-dom";
 
-const RootLayout = () => {
+const CounterLayout = () => {
     return (
         <div className="min-h-screen grid grid-rows-[64px_1fr]">
             <header className="py-4 place-self-center">
@@ -9,11 +9,8 @@ const RootLayout = () => {
                     <Link to="/" className="">
                         Counter
                     </Link>
-                    <Link to="/posts" className="">
-                        Posts
-                    </Link>
-                    <Link to="/posts/add" className="">
-                        Create Post
+                    <Link to="/" className="">
+                        Blog
                     </Link>
                 </nav>
             </header>
@@ -25,4 +22,4 @@ const RootLayout = () => {
     );
 };
 
-export default RootLayout;
+export default CounterLayout;
