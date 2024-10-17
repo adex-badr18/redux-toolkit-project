@@ -4,6 +4,10 @@ import App from "./App.jsx";
 import "./index.css";
 import { store } from "./app/store.js";
 import { Provider } from "react-redux";
+import { fetchUsers } from "./features/users/usersSlice.js";
+
+// Fetch all users on app initial load
+store.dispatch(fetchUsers());
 
 createRoot(document.getElementById("root")).render(
     <StrictMode>

@@ -11,7 +11,7 @@ const Post = ({ post }) => {
             </div>
             <div className="space-y-1">
                 <p className="mt-1 space-x-3 text-sm">
-                    <PostAuthor userId={post.postAuthor} />
+                    <PostAuthor userId={post.userId} />
                     <TimeAgo timestamp={post.date} />
                 </p>
                 <ReactionButtons post={post} />
