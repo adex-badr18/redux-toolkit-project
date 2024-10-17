@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { addPost } from "./postsSlice";
+import { addPost, addNewPost } from "./postsSlice";
 import { selectAllUsers } from "../../users/usersSlice";
 
 const AddPostForm = () => {
     const users = useSelector(selectAllUsers);
     const dispatch = useDispatch();
     const [postData, setPostData] = useState({
-        postAuthor: "",
+        userId: "",
         title: "",
-        content: "",
+        body: "",
         date: new Date().toISOString(),
         reactions: {
             thumbsUp: 0,
@@ -20,6 +20,12 @@ const AddPostForm = () => {
             coffee: 0,
         },
     });
+    const [addRequestStatus, setAddRequestStatus] = useState("idle");
+    // const canSave = Object.values(postData).some((value) => value === "");
+    const canSave =
+        [postData.title, postData.body, postData.userId].every(Boolean) &&
+        addRequestStatus === "idle";
+    console.log(canSave)
 
     const handleFormChange = (e) => {
         const { name, value } = e.target;
@@ -30,16 +36,21 @@ const AddPostForm = () => {
         }));
     };
 
+    console.log(postData)
+
     const onSavePostClicked = () => {
-        const { title, content } = postData;
-        if (title && content) {
-            dispatch(addPost(postData));
+        if (canSave) {
+            try {
+                setAddRequestStatus("pending");
+                dispatch(addNewPost(postData)).unwrap();
+                setPostData({ title: "", body: "", userId: "" });
+            } catch (error) {
+                console.log("Failed to save the post", error);
+            } finally {
+                setAddRequestStatus("idle");
+            }
         }
-
-        setPostData({ title: "", content: "" });
     };
-
-    const canSave = Object.values(postData).some((value) => value === "");
 
     const usersOptions = users.map((user) => (
         <option key={user.id} value={user.id}>
@@ -70,13 +81,13 @@ const AddPostForm = () => {
                     </div>
 
                     <div className="flex flex-col gap-1">
-                        <label htmlFor="postAuthor" className="text-white">
+                        <label htmlFor="userId" className="text-white">
                             Author
                         </label>
                         <select
                             type="text"
-                            id="postAuthor"
-                            name="postAuthor"
+                            id="userId"
+                            name="userId"
                             value={postData.userId}
                             onChange={handleFormChange}
                             className="px-3 py-2 rounded "
@@ -87,14 +98,14 @@ const AddPostForm = () => {
                     </div>
 
                     <div className="flex flex-col gap-1">
-                        <label htmlFor="content" className="text-white">
-                            Post Content
+                        <label htmlFor="body" className="text-white">
+                            Post Body
                         </label>
                         <textarea
                             type="text"
-                            id="content"
-                            name="content"
-                            value={postData.content}
+                            id="body"
+                            name="body"
+                            value={postData.body}
                             onChange={handleFormChange}
                             rows={3}
                             className="px-3 py-2 rounded "
@@ -105,7 +116,7 @@ const AddPostForm = () => {
                         onClick={onSavePostClicked}
                         type="button"
                         className="bg-gray-950 text-white rounded px-3 py-2 mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={canSave}
+                        disabled={!canSave}
                     >
                         Save Post
                     </button>
