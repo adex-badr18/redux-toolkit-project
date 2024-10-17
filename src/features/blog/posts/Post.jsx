@@ -3,6 +3,7 @@ import PostAuthor from "./PostAuthor";
 import TimeAgo from "./TimeAgo";
 import ReactionButtons from "./ReactionButtons";
 
+import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectPostById } from "./postsSlice";
@@ -29,6 +30,7 @@ const Post = () => {
             </div>
             <div className="space-y-1">
                 <p className="mt-1 space-x-3 text-sm">
+                    <Link to={`/post/edit/${post.id}`} className="underline">Edit</Link>
                     <PostAuthor userId={post.userId} />
                     <TimeAgo timestamp={post.date} />
                 </p>

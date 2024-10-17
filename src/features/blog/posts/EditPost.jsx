@@ -1,31 +1,39 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { addNewPost } from "./postsSlice";
+import { useParams, useNavigate } from "react-router-dom";
+
+import { updatePost, selectPostById } from "./postsSlice";
 import { selectAllUsers } from "../../users/usersSlice";
 
-const AddPostForm = () => {
-    const users = useSelector(selectAllUsers);
+const EditPost = () => {
+    const { postId } = useParams();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const post = useSelector((state) => selectPostById(state, Number(postId)));
+    const users = useSelector(selectAllUsers);
+    
+    const [requestStatus, setRequestStatus] = useState("idle");
     const [postData, setPostData] = useState({
-        userId: "",
-        title: "",
-        body: "",
+        id: post.id ?? "",
+        userId: post.userId ?? "",
+        title: post.title ?? "",
+        body: post.body ?? "",
         date: new Date().toISOString(),
-        reactions: {
-            thumbsUp: 0,
-            wow: 0,
-            heart: 0,
-            rocket: 0,
-            coffee: 0,
-        },
+        reactions: post.reactions,
     });
-    const [addRequestStatus, setAddRequestStatus] = useState("idle");
-    // const canSave = Object.values(postData).some((value) => value === "");
+
+    if (!post) {
+        return (
+            <section>
+                <h2 className="">Post not found!</h2>
+            </section>
+        );
+    }
+
     const canSave =
-        [postData.title, postData.body, postData.userId].every(Boolean) &&
-        addRequestStatus === "idle";
-    console.log(canSave)
+        [postData.title, postData.body, postData.userId].every(Boolean) && requestStatus === "idle";
 
     const handleFormChange = (e) => {
         const { name, value } = e.target;
@@ -36,18 +44,17 @@ const AddPostForm = () => {
         }));
     };
 
-    console.log(postData)
-
     const onSavePostClicked = () => {
         if (canSave) {
             try {
-                setAddRequestStatus("pending");
-                dispatch(addNewPost(postData)).unwrap();
-                setPostData({ title: "", body: "", userId: "" });
+                setRequestStatus("pending");
+                dispatch(updatePost(postData)).unwrap();
+                setPostData({ id: "", title: "", body: "", userId: "" });
+                navigate(`/post/${post.id}`)
             } catch (error) {
                 console.log("Failed to save the post", error);
             } finally {
-                setAddRequestStatus("idle");
+                setRequestStatus("idle");
             }
         }
     };
@@ -62,7 +69,7 @@ const AddPostForm = () => {
         <section className="space-y-6 p-10">
             <div className="w-full max-w-[578px] mx-auto px-6 py-4 md:px-10 md:py-6 space-y-10">
                 <h2 className="text-white text-4xl font-bold">
-                    Add a new post
+                    Edit Post
                 </h2>
 
                 <form action="" className="grid gap-5">
@@ -118,7 +125,7 @@ const AddPostForm = () => {
                         className="bg-gray-950 text-white rounded px-3 py-2 mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled={!canSave}
                     >
-                        Save Post
+                        Update Post
                     </button>
                 </form>
             </div>
@@ -126,4 +133,4 @@ const AddPostForm = () => {
     );
 };
 
-export default AddPostForm;
+export default EditPost;

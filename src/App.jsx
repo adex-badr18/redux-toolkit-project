@@ -8,6 +8,7 @@ import Counter from "./features/counter/Counter";
 import PostsList from "./features/blog/posts/PostsList";
 import AddPostForm from "./features/blog/posts/AddPostForm";
 import Post from "./features/blog/posts/Post";
+import EditPost from "./features/blog/posts/EditPost";
 
 const blogLinks = [
     {id: 1, name: "Posts", path: "/"},
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
                 element: <section className="p-10">{<Outlet />}</section>,
                 children: [
                     { index: true, element: <AddPostForm /> },
+                    { path: "edit/:postId", element: <EditPost /> },
                     { path: ":postId", element: <Post /> },
                 ],
             },

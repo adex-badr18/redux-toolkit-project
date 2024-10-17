@@ -51,6 +51,12 @@ export const addNewPost = createAsyncThunk("posts/addNewPost", async (post) => {
     return response.data;
 });
 
+export const updatePost = createAsyncThunk("posts/updatePost", async (post) => {
+    const { id } = post;
+    const response = await axios.put(`${POSTS_URL}/${id}`, post);
+    return response.data;
+});
+
 export const postsSlice = createSlice({
     name: "posts",
     initialState,
@@ -120,8 +126,19 @@ export const postsSlice = createSlice({
                     coffee: 0,
                 };
 
-                console.log(action.payload);
+                // console.log(action.payload);
                 state.posts.push(action.payload);
+            })
+            .addCase(updatePost.fulfilled, (state, action) => {
+                if (!action.payload?.id) {
+                    console.log("Failed to update post!");
+                    console.log(action.payload);
+                    return;
+                }
+
+                const {id} = action.payload
+                const posts = state.posts.filter(post => post.id != id)
+                state.posts = [...posts, action.payload]
             });
     },
 });
