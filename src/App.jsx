@@ -9,16 +9,20 @@ import PostsList from "./features/blog/posts/PostsList";
 import AddPostForm from "./features/blog/posts/AddPostForm";
 import Post from "./features/blog/posts/Post";
 import EditPost from "./features/blog/posts/EditPost";
+import UsersList from "./features/users/UsersList";
+import User from "./features/users/User";
+import { Navigate } from "react-router-dom";
 
 const blogLinks = [
-    {id: 1, name: "Posts", path: "/"},
-    {id: 2, name: "Create Post", path: "/post"},
-    {id: 3, name: "Counter", path: "/counter"},
+    { id: 4, name: "Users", path: "/users" },
+    { id: 1, name: "Posts", path: "/" },
+    { id: 2, name: "Create Post", path: "/post" },
+    { id: 3, name: "Counter", path: "/counter" },
 ];
 
 const counterLinks = [
-    {id: 1, name: "Counter", path: "/counter"},
-    {id: 2, name: "Blog", path: "/"},
+    { id: 1, name: "Counter", path: "/counter" },
+    { id: 2, name: "Blog", path: "/" },
 ];
 
 const router = createBrowserRouter([
@@ -36,6 +40,8 @@ const router = createBrowserRouter([
                     { path: ":postId", element: <Post /> },
                 ],
             },
+            { path: "users", element: <UsersList /> },
+            { path: "user/:userId", element: <User /> },
         ],
     },
     {
@@ -43,6 +49,8 @@ const router = createBrowserRouter([
         element: <Layout title="Redux Counter" links={counterLinks} />,
         children: [{ index: true, element: <Counter /> }],
     },
+    { path: "*", element: <Navigate to="/" replace /> },
+ 
 ]);
 
 function App() {
