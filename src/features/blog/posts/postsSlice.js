@@ -58,7 +58,8 @@ export const updatePost = createAsyncThunk("posts/updatePost", async (post) => {
         const response = await axios.put(`${POSTS_URL}/${id}`, post);
         return response.data;
     } catch (error) {
-        return error.message;
+        // return error.message;
+        return post; // ONly for testing Redux!
     }
 });
 
@@ -144,7 +145,6 @@ export const postsSlice = createSlice({
                     coffee: 0,
                 };
 
-                // console.log(action.payload);
                 state.posts.push(action.payload);
             })
             .addCase(updatePost.fulfilled, (state, action) => {
@@ -159,7 +159,6 @@ export const postsSlice = createSlice({
                 state.posts = [...posts, action.payload];
             })
             .addCase(deletePost.fulfilled, (state, action) => {
-                console.log(action.payload);
                 if (!action.payload?.id) {
                     console.log("Failed to delete post!");
                     return;
