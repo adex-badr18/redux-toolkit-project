@@ -11,17 +11,20 @@ import {
 import PostCard from "./PostCard";
 
 const PostsList = () => {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
     const posts = useSelector(selectAllPosts);
     const postsStatus = useSelector(getPostsStatus);
     const error = useSelector(getPostsError);
 
-    useEffect(() => {
-        if (postsStatus === "idle") {
-            dispatch(fetchPosts());
-        }
-    }, [postsStatus, dispatch]);
+    // This is commented out because
+    // we have already fetch all posts on initial app load,
+    // Code can be found in main.jsx
+    // useEffect(() => {
+    //     if (postsStatus === "idle") {
+    //         dispatch(fetchPosts());
+    //     }
+    // }, [postsStatus, dispatch]);
 
     let content;
     if (postsStatus === "loading") {
