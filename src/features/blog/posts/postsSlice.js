@@ -53,8 +53,26 @@ export const addNewPost = createAsyncThunk("posts/addNewPost", async (post) => {
 
 export const updatePost = createAsyncThunk("posts/updatePost", async (post) => {
     const { id } = post;
-    const response = await axios.put(`${POSTS_URL}/${id}`, post);
-    return response.data;
+
+    try {
+        const response = await axios.put(`${POSTS_URL}/${id}`, post);
+        return response.data;
+    } catch (error) {
+        return error.message;
+    }
+});
+
+export const deletePost = createAsyncThunk("posts/delete", async (post) => {
+    const { id } = post;
+
+    try {
+        const response = await axios.delete(`${POSTS_URL}/${id}`);
+
+        if (response?.status === 200) return post;
+        return `${response?.status}: ${response?.statusText}`;
+    } catch (error) {
+        return error.message;
+    }
 });
 
 export const postsSlice = createSlice({
@@ -136,9 +154,20 @@ export const postsSlice = createSlice({
                     return;
                 }
 
-                const {id} = action.payload
-                const posts = state.posts.filter(post => post.id != id)
-                state.posts = [...posts, action.payload]
+                const { id } = action.payload;
+                const posts = state.posts.filter((post) => post.id != id);
+                state.posts = [...posts, action.payload];
+            })
+            .addCase(deletePost.fulfilled, (state, action) => {
+                console.log(action.payload);
+                if (!action.payload?.id) {
+                    console.log("Failed to delete post!");
+                    return;
+                }
+
+                const { id } = action.payload;
+                const posts = state.posts.filter((post) => post.id != id);
+                state.posts = posts;
             });
     },
 });

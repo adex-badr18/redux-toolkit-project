@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useParams, useNavigate } from "react-router-dom";
 
-import { updatePost, selectPostById } from "./postsSlice";
+import { updatePost, deletePost, selectPostById } from "./postsSlice";
 import { selectAllUsers } from "../../users/usersSlice";
 
 const EditPost = () => {
@@ -13,7 +13,7 @@ const EditPost = () => {
 
     const post = useSelector((state) => selectPostById(state, Number(postId)));
     const users = useSelector(selectAllUsers);
-    
+
     const [requestStatus, setRequestStatus] = useState("idle");
     const [postData, setPostData] = useState({
         id: post.id ?? "",
@@ -33,7 +33,8 @@ const EditPost = () => {
     }
 
     const canSave =
-        [postData.title, postData.body, postData.userId].every(Boolean) && requestStatus === "idle";
+        [postData.title, postData.body, postData.userId].every(Boolean) &&
+        requestStatus === "idle";
 
     const handleFormChange = (e) => {
         const { name, value } = e.target;
@@ -50,12 +51,25 @@ const EditPost = () => {
                 setRequestStatus("pending");
                 dispatch(updatePost(postData)).unwrap();
                 setPostData({ id: "", title: "", body: "", userId: "" });
-                navigate(`/post/${post.id}`)
+                navigate(`/post/${post.id}`);
             } catch (error) {
                 console.log("Failed to save the post", error);
             } finally {
                 setRequestStatus("idle");
             }
+        }
+    };
+
+    const onDeletePostClicked = () => {
+        try {
+            setRequestStatus("pending");
+            dispatch(deletePost(postData)).unwrap();
+            setPostData({ id: "", title: "", body: "", userId: "" });
+            navigate("/");
+        } catch (error) {
+            console.log("Failed to delete post", error);
+        } finally {
+            setRequestStatus("idle");
         }
     };
 
@@ -68,9 +82,7 @@ const EditPost = () => {
     return (
         <section className="space-y-6 p-10">
             <div className="w-full max-w-[578px] mx-auto px-6 py-4 md:px-10 md:py-6 space-y-10">
-                <h2 className="text-white text-4xl font-bold">
-                    Edit Post
-                </h2>
+                <h2 className="text-white text-4xl font-bold">Edit Post</h2>
 
                 <form action="" className="grid gap-5">
                     <div className="flex flex-col gap-1">
@@ -119,14 +131,24 @@ const EditPost = () => {
                         />
                     </div>
 
-                    <button
-                        onClick={onSavePostClicked}
-                        type="button"
-                        className="bg-gray-950 text-white rounded px-3 py-2 mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={!canSave}
-                    >
-                        Update Post
-                    </button>
+                    <div className="flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4">
+                        <button
+                            onClick={onSavePostClicked}
+                            type="button"
+                            className="w-full bg-gray-950 hover:bg-gray-900 text-white rounded px-3 py-2 mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={!canSave}
+                        >
+                            Update Post
+                        </button>
+                        <button
+                            onClick={onDeletePostClicked}
+                            type="button"
+                            className="w-full bg-red-600 hover:bg-red-700 text-white rounded px-3 py-2 mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                            // disabled={!canSave}
+                        >
+                            Delete Post
+                        </button>
+                    </div>
                 </form>
             </div>
         </section>
