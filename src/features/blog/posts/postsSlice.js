@@ -39,6 +39,7 @@ const initialState = {
     posts: [],
     status: "idle", // "idle" | "loading" | "succeeded" | "failed"
     error: null,
+    count: 0,
 };
 
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
@@ -59,7 +60,7 @@ export const updatePost = createAsyncThunk("posts/updatePost", async (post) => {
         return response.data;
     } catch (error) {
         // return error.message;
-        return post; // ONly for testing Redux!
+        return post; // Only for testing Redux!
     }
 });
 
@@ -80,25 +81,29 @@ export const postsSlice = createSlice({
     name: "posts",
     initialState,
     reducers: {
-        addPost: {
-            reducer: (state, action) => {
-                state.posts.push(action.payload);
-            },
-            prepare: (postData) => {
-                return {
-                    payload: {
-                        id: nanoid(),
-                        ...postData,
-                    },
-                };
-            },
-        },
+        // This reducer has been replaced with addNewPost in extraReducers below
+        // addPost: {
+        //     reducer: (state, action) => {
+        //         state.posts.push(action.payload);
+        //     },
+        //     prepare: (postData) => {
+        //         return {
+        //             payload: {
+        //                 id: nanoid(),
+        //                 ...postData,
+        //             },
+        //         };
+        //     },
+        // },
         addReaction: (state, action) => {
             const { postId, reaction } = action.payload;
             const existingPost = state.posts.find((post) => post.id === postId);
             if (existingPost) {
                 existingPost.reactions[reaction]++;
             }
+        },
+        incrementCount: (state, action) => {
+            state.count = state.count + 1;
         },
     },
     extraReducers: (builder) => {
@@ -174,10 +179,11 @@ export const postsSlice = createSlice({
 export const selectAllPosts = (state) => state.posts.posts;
 export const getPostsStatus = (state) => state.posts.status;
 export const getPostsError = (state) => state.posts.error;
+export const getCount = (state) => state.posts.count;
 
 export const selectPostById = (state, postId) =>
     state.posts.posts.find((post) => post.id === postId);
 
-export const { addPost, addReaction } = postsSlice.actions;
+export const { addPost, addReaction, incrementCount } = postsSlice.actions;
 
 export default postsSlice.reducer;

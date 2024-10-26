@@ -21,7 +21,7 @@ const User = () => {
 
     return (
         <section className="space-y-6 p-10 text-white">
-            <h2 className="">{user?.name}</h2>
+            <h2 className="text-2xl font-bold">{user?.name}</h2>
 
             <ol className="divide-y-2">{postList}</ol>
         </section>
