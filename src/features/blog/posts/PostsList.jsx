@@ -3,6 +3,7 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import {
     selectAllPosts,
+    selectPostIds,
     getPostsError,
     getPostsStatus,
     fetchPosts,
@@ -13,12 +14,12 @@ import PostCard from "./PostCard";
 const PostsList = () => {
     // const dispatch = useDispatch();
 
-    const posts = useSelector(selectAllPosts);
+    const orderedPostIds = useSelector((state) => selectPostIds(state));
     const postsStatus = useSelector(getPostsStatus);
     const error = useSelector(getPostsError);
 
     // This is commented out because
-    // we have already fetch all posts on initial app load,
+    // we have already fetched all posts on initial app load,
     // Code can be found in main.jsx
     // useEffect(() => {
     //     if (postsStatus === "idle") {
@@ -31,19 +32,20 @@ const PostsList = () => {
         content = <p className="text-white">Loading...</p>;
     } else if (postsStatus === "succeeded") {
         // Get distinct posts
-        const uniquePosts = posts.filter(
-            (post, index, self) =>
-                index === self.findIndex((t) => post.id === t.id)
-        );
+        // const uniquePosts = posts.filter(
+        //     (post, index, self) =>
+        //         index === self.findIndex((t) => post.id === t.id)
+        // );
 
         // Sort array by the most recent posts,
-        // make a shallow copy of the array first, 
+        // make a shallow copy of the array first,
         // to prevent sorting the original data.
-        const orderedPosts = uniquePosts
-            .slice()
-            .sort((a, b) => b.date.localeCompare(a.date));
-        content = orderedPosts.map((post, index) => (
-            <PostCard key={index} post={post} />
+        // const orderedPosts = uniquePosts
+        //     .slice()
+        //     .sort((a, b) => b.date.localeCompare(a.date));
+
+        content = orderedPostIds.map((postId) => (
+            <PostCard key={postId} postId={postId} />
         ));
     } else if (postsStatus === "failed") {
         content = <p className="text-white">{error}</p>;
